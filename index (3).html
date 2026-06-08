@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPU SCHEDULER — Process Execution Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div class="noise"></div>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-block">
+      <span class="logo-tag">SYS/EXEC</span>
+      <h1 class="logo">CPU<br><span>SCHEDULER</span></h1>
+    </div>
+    <div class="header-right">
+      <div class="status-strip">
+        <span class="dot blink"></span>
+        <span id="clock">--:--:--</span>
+      </div>
+      <p class="subtitle">Process Execution Simulator<br>FCFS · SJF · Round Robin</p>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ALGORITHM TABS -->
+  <section class="tabs-section">
+    <div class="tab-bar">
+      <button class="tab active" data-tab="fcfs">01 / FCFS</button>
+      <button class="tab" data-tab="sjf">02 / SJF</button>
+      <button class="tab" data-tab="rr">03 / ROUND ROBIN</button>
+      <button class="tab" data-tab="testcases">04 / TEST CASES</button>
+    </div>
+  </section>
+
+  <!-- FCFS PANEL -->
+  <div class="panel active" id="panel-fcfs">
+    <div class="panel-header">
+      <div>
+        <h2>First Come First Serve</h2>
+        <p class="algo-desc">Non-preemptive. Processes execute in arrival order. Simple but may cause convoy effect.</p>
+      </div>
+      <div class="algo-badge">NON-PREEMPTIVE</div>
+    </div>
+    <div class="input-grid" id="fcfs-input-grid">
+      <div class="input-row header-row">
+        <span>PROCESS</span><span>ARRIVAL TIME</span><span>BURST TIME</span><span></span>
+      </div>
+      <div class="input-row" id="fcfs-rows">
+        <!-- rows injected by JS -->
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-add" onclick="addRow('fcfs')">+ ADD PROCESS</button>
+      <button class="btn-run" onclick="runFCFS()">▶ RUN FCFS</button>
+      <button class="btn-clear" onclick="clearAll('fcfs')">✕ CLEAR</button>
+    </div>
+    <div id="fcfs-output" class="output-section hidden"></div>
+  </div>
+
+  <!-- SJF PANEL -->
+  <div class="panel" id="panel-sjf">
+    <div class="panel-header">
+      <div>
+        <h2>Shortest Job First</h2>
+        <p class="algo-desc">Non-preemptive. Selects process with shortest burst time. Optimal avg wait time but may starve long jobs.</p>
+      </div>
+      <div class="algo-badge">NON-PREEMPTIVE</div>
+    </div>
+    <div class="input-grid" id="sjf-input-grid">
+      <div class="input-row header-row">
+        <span>PROCESS</span><span>ARRIVAL TIME</span><span>BURST TIME</span><span></span>
+      </div>
+      <div id="sjf-rows"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-add" onclick="addRow('sjf')">+ ADD PROCESS</button>
+      <button class="btn-run" onclick="runSJF()">▶ RUN SJF</button>
+      <button class="btn-clear" onclick="clearAll('sjf')">✕ CLEAR</button>
+    </div>
+    <div id="sjf-output" class="output-section hidden"></div>
+  </div>
+
+  <!-- ROUND ROBIN PANEL -->
+  <div class="panel" id="panel-rr">
+    <div class="panel-header">
+      <div>
+        <h2>Round Robin</h2>
+        <p class="algo-desc">Preemptive. Each process gets a fixed time quantum. Fair scheduling, good for time-sharing systems.</p>
+      </div>
+      <div class="algo-badge preemptive">PREEMPTIVE</div>
+    </div>
+    <div class="quantum-row">
+      <label>TIME QUANTUM</label>
+      <input type="number" id="rr-quantum" value="2" min="0.1" step="0.1" class="quantum-input" placeholder="e.g. 2">
+    </div>
+    <div class="input-grid">
+      <div class="input-row header-row">
+        <span>PROCESS</span><span>ARRIVAL TIME</span><span>BURST TIME</span><span></span>
+      </div>
+      <div id="rr-rows"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-add" onclick="addRow('rr')">+ ADD PROCESS</button>
+      <button class="btn-run" onclick="runRR()">▶ RUN RR</button>
+      <button class="btn-clear" onclick="clearAll('rr')">✕ CLEAR</button>
+    </div>
+    <div id="rr-output" class="output-section hidden"></div>
+  </div>
+
+  <!-- TEST CASES PANEL -->
+  <div class="panel" id="panel-testcases">
+    <div class="panel-header">
+      <div>
+        <h2>Test Cases</h2>
+        <p class="algo-desc">Validates all three algorithms against positive, negative, and floating-point inputs.</p>
+      </div>
+      <div class="algo-badge edge">VALIDATION</div>
+    </div>
+    <div class="test-grid" id="test-grid">
+      <!-- filled by JS -->
+    </div>
+    <div class="btn-row">
+      <button class="btn-run" onclick="runAllTests()">▶ RUN ALL TESTS</button>
+    </div>
+    <div id="test-results" class="test-results-section"></div>
+  </div>
+
+</main>
+
+<footer>
+  <span>CPU SCHEDULER SIMULATOR</span>
+  <span>CASE STUDY — OS PROCESS MANAGEMENT</span>
+  <span id="footer-clock"></span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
